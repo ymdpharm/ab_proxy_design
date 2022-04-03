@@ -1,0 +1,14 @@
+FROM python:3.9
+
+WORKDIR /app
+
+RUN pip install poetry==1.1.13
+
+COPY poetry.lock pyproject.toml /app
+RUN poetry config virtualenvs.in-project true && \
+    poetry install --no-root
+
+ENV PATH=/app/.venv/bin:$PATH
+
+COPY src /app/src 
+CMD uvicorn src.main:app --port 8000

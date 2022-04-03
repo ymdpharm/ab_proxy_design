@@ -1,0 +1,19 @@
+# use for dev
+version: '3.7'
+services:
+  server:
+    build:
+      context: .
+      dockerfile: src/Dockerfile.dev
+    environment:
+      UNDERLYING_HOST: "http://mock:8001/"
+    command: python src/main.py
+    ports:
+      - 8000:8000
+  mock:
+    build:
+      context: .
+      dockerfile: mock/Dockerfile.dev
+    command: python mock/main.py
+    ports:
+      - 8001:8001

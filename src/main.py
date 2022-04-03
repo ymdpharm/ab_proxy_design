@@ -3,6 +3,7 @@ from model.request_schema import RequestSchema
 from service.http_client_wrapper import HttpClientWrapper
 from service.proxy_service import ProxyService
 from service.routing_service import RoutingService
+from config.config import settings
 from typing import Dict, Any
 
 
@@ -11,9 +12,7 @@ app = FastAPI()
 ## composition with vanilla DI
 http_client_wrapper = HttpClientWrapper()
 logging_service = ...  ## todo: impl
-routing_service = RoutingService(
-    "salt", {"http://localhost:8001/hoge1": 0.3, "http://localhost:8001/hoge2": 0.7}
-)  ## todo: make conf
+routing_service = RoutingService(settings.SALT, settings.RATIO) 
 proxy_service = ProxyService(http_client_wrapper, routing_service)
 
 

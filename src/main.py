@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from model.request_schema import RequestSchema
-from service.http_client_wrapper import HttpClientWrapper
+from service.http_client_wrapper import AsyncHttpClientWrapper
 from service.logging_service import LoggingService
 from service.proxy_service import ProxyService
 from service.routing_service import RoutingService
@@ -11,15 +11,15 @@ import httpx
 app = FastAPI()
 
 ## composition with vanilla DI
-http_client_wrapper = HttpClientWrapper(httpx.Client())
+http_client_wrapper = AsyncHttpClientWrapper(httpx.AsyncClient())
 logging_service = LoggingService()
 routing_service = RoutingService(settings.SALT, settings.RATIO)
 proxy_service = ProxyService(http_client_wrapper, routing_service, logging_service)
 
 
 @app.post("/hoge")
-def hoge(req: RequestSchema) -> Dict[str, Any]:
-    return proxy_service.route_and_post(req)
+async def hoge(req: RequestSchema) -> Dict[str, Any]:
+    return await proxy_service.route_and_post(req)
 
 
 @app.on_event("shutdown")

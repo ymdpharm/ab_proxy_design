@@ -6,12 +6,12 @@ from service.proxy_service import ProxyService
 from service.routing_service import RoutingService
 from config.config import settings
 from typing import Dict, Any
-
+import httpx
 
 app = FastAPI()
 
 ## composition with vanilla DI
-http_client_wrapper = HttpClientWrapper()
+http_client_wrapper = HttpClientWrapper(httpx.Client())
 logging_service = LoggingService()
 routing_service = RoutingService(settings.SALT, settings.RATIO)
 proxy_service = ProxyService(http_client_wrapper, routing_service, logging_service)
@@ -20,6 +20,11 @@ proxy_service = ProxyService(http_client_wrapper, routing_service, logging_servi
 @app.post("/hoge")
 def hoge(req: RequestSchema) -> Dict[str, Any]:
     return proxy_service.route_and_post(req)
+
+
+@app.on_event("shutdown")
+def shutdown():
+    http_client_wrapper.close()
 
 
 ## todo: error handling

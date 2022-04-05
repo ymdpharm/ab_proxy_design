@@ -24,7 +24,7 @@ async def hoge(req: RequestSchema) -> Dict[str, Any]:
 
 @app.on_event("shutdown")
 async def shutdown():
-    http_client_wrapper.close()
+    return await http_client_wrapper.close()
 
 
 ## todo: error handling

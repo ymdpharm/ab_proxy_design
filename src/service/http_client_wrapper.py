@@ -29,8 +29,8 @@ class AsyncHttpClientWrapper:
     def __init__(self, client: httpx.AsyncClient):
         self.client = client
 
-    def close(self):
-        self.client.aclose()
+    async def close(self):
+        return await self.client.aclose()
 
     async def post(self, url: str, body: Dict[str, Any]):
         try:

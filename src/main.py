@@ -23,7 +23,7 @@ async def hoge(req: RequestSchema) -> Dict[str, Any]:
 
 
 @app.on_event("shutdown")
-def shutdown():
+async def shutdown():
     http_client_wrapper.close()
 
 

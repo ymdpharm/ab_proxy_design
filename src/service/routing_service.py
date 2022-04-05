@@ -15,7 +15,6 @@ class RoutingService:
 
     def find_route(self, seed: str):
         hash = self._get_hash(seed)
-        print(hash)
         cum = 0
         for k, v in self.ratio.items():
             cum += v

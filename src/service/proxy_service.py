@@ -17,7 +17,10 @@ class ProxyService:
         self.logging_service: LoggingService = logging_service
 
     async def route_and_post(self, req: RequestSchema) -> Dict[str, Any]:
-        url = self.routing_service.find_route(req.get_seed())
-        r = await self.http_client_wrapper.post(url, req.original)
-        ## todo: use logging_service
+        seed = req.get_seed()
+        original = req.original
+
+        url = self.routing_service.find_route(seed)
+        r = await self.http_client_wrapper.post(url, original)
+        self.logging_service.publish(seed, url, r)
         return r
